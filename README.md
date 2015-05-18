@@ -31,14 +31,14 @@ Up until you call ```Identify``` for the first time, all tracked events belong t
 ### Adding Properties
 Both ```Identify``` and ```Track``` accept an optional dictionary parameter that can be used to add custom information (properties) to the respective entity. Usage is straightforward:
 
-<pre><code>infinario.Track("my_player_action", new Dictionary<string,object> {{"daily_score", 4700}});                                       
+<pre><code>infinario.Track("my_player_action", new Dictionary&lt;string,object&gt; {{"daily_score", 4700}});                                       
 
-infinario.Identify("player@example.com", new Dictionary<string,object> {
+infinario.Identify("player@example.com", new Dictionary&lt;string,object&gt; {
                                                           {"first_name", "John"},
                                                           { "last_name", "Doe" }
                                                         }); 
                                                         
-infinario.Update(new Dictionary<string,object> {{"level", 1}}); // A shorthand for adding properties to the current customer
+infinario.Update(new Dictionary&lt;string,object&gt; {{"level", 1}}); // A shorthand for adding properties to the current customer
 </code></pre>
 
 <h3>Timestamps</h3>
