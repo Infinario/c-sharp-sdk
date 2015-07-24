@@ -41,6 +41,13 @@ infinario.Identify("player@example.com", new Dictionary&lt;string,object&gt; {
 infinario.Update(new Dictionary&lt;string,object&gt; {{"level", 1}}); // A shorthand for adding properties to the current customer
 </code></pre>
 
+<h3>Player Sessions</h3>
+Infinario automatically manages player sessions. Each session starts with a <code>session_start</code> event and ends with <code>session_end</code>.
+
+Once started, the SDK tries to recreate the previous session from its persistent cache. If it fails to, or the session has already expired it automatically creates a new one.
+
+
+
 <h3>Timestamps</h3>
 The SDK automatically adds timestamps to all events. To specify your own timestamp, use one of the following method overloads:
 <pre><code>infinario.Track("my_player_action", &lt;long_your_tsp&gt;);
