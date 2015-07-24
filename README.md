@@ -41,6 +41,10 @@ infinario.Identify("player@example.com", new Dictionary&lt;string,object&gt; {
 infinario.Update(new Dictionary&lt;string,object&gt; {{"level", 1}}); // A shorthand for adding properties to the current customer
 </code></pre>
 
+<h3>Virtual payment</h3>
+If you use virtual payments (e.g. purchase with in-game gold, coins, ...) in your project, you can track them with a call to TrackVirtualPayment.
+<pre><code>infinario.TrackVirtualPayment("gold", 3, "SWORD", "SWORD.TYPE");</pre></code>
+
 <h3>Player Sessions</h3>
 Infinario automatically manages player sessions. Each session starts with a <code>session_start</code> event and ends with <code>session_end</code>.
 
