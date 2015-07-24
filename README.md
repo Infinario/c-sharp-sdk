@@ -12,7 +12,10 @@
 
 To start tracking, you need to know your <code>company_token</code>. To initialize the tracking, simply create an instance of the <code>Infinario</code> class:
 
-<pre><code>var infinario = new Infinario.Infinario("your_company_token");</code></pre>
+<pre><code>var infinario = new Infinario.Infinario("your_company_token");
+
+//track your app version code
+var infinario = new Infinario.Infinario("your_company_token", "1.5.0");</code></pre>
 
 <br>
 <p>Now you can track events by calling the <code>Track</code> method:</p>
