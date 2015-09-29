@@ -1,69 +1,133 @@
-<h1>Getting started with Infinario C# SDK</h1>
+# Getting started with Infinario C# SDK
 
-<h2>Installation</h2>
-<ol>
-	<li>Download the latest <b>InfinarioSDKC.dll</b></li>
-	<li>In your project right click on <b>References -&gt; Add Reference... -&gt; Browse -&gt; </b> select downloaded <b>InfinarioSDKC.dll</b></li>
-</ol>
+## Installation
 
-<h2>Usage</h2>
+1.  Download the latest **InfinarioSDK.dll**
+2.  In your project right click on **References -> Add Reference... -> Browse ->** select downloaded **InfinarioSDK.dll**
+3.  Add following packages through NuGet Package Manager. In your project right click on **References -> Manage NuGet Packages... -> Browse ->
 
-<h3>Basic Tracking</h3>
+    1.  **System.Data.SQLite** to make access to SQL database
 
-<p>To start tracking, you need to know your <code>company_token</code>. To initialize the tracking, simply create an instance of the <code>Infinario</code> class:</p>
+## Usage
 
-<pre><code>var infinario = new Infinario.Infinario("your_company_token");
+### Basic Tracking
 
-//track your app version code
-var infinario = new Infinario.Infinario("your_company_token", "1.5.0");</code></pre>
-<br>
-<p>Now you can track events by calling the <code>Track</code> method:</p>
-<pre><code>infinario.Track("my_user_action");</code></pre>
-<br>
-<p>What happens now, is that an event called <code>my_user_action</code> is recorded for the current player.</p>
+To start tracking, you need to know your `projectToken`. To initialize the tracking, simply get an instance of the `Infinario` class and call `Initialize`:
 
-<h3>Identifying Players</h3>
-<p>To control the identity of the current player use the <code>Identify</code> method. By calling</p>
-<pre><code>infinario.Identify("player@example.com");</code></pre>
+    var infinario = Infinario.Infinario.GetInstance();
+    infinario.Initialize("projectToken");
 
-<p>you can register a new player in Infinario. All events you track by the <code>Track</code> method from now on will belong to this player. To switch to an existing player, simply call <code>Identify</code> with his name. You can switch the identity of the current player as many times as you need to.</p>
+You can also specify app version:
 
-<h3>Anonymous Players</h3>
-<p>Up until you call <code>Identify</code> for the first time, all tracked events belong to an anonymous player (internally identified with a cookie). Once you call <code>Identify</code>, the previously anonymous player is automatically merged with the newly identified player.</p>
+    infinario.Initialize("projectToken", "1.5.0");
 
-<h3>Adding Properties</h3>
-<p>Both <code>Identify</code> and <code>Track</code> accept an optional dictionary parameter that can be used to add custom information (properties) to the respective entity. Usage is straightforward:</p>
+Now you can track events by calling the `Track` method:
 
-<pre><code>infinario.Track("my_player_action", new Dictionary&lt;string,object&gt; {{"daily_score", 4700}});                                       
+    infinario.Track("my_user_action");
 
-infinario.Identify("player@example.com", new Dictionary&lt;string,object&gt; {
-                                                          {"first_name", "John"},
-                                                          { "last_name", "Doe" }
-                                                        }); 
-                                                        
-infinario.Update(new Dictionary&lt;string,object&gt; {{"level", 1}}); // A shorthand for adding properties to the current customer
-</code></pre>
+What happens now, is that an event called `my_user_action` is recorded for the current player.
 
-<h3>Virtual payment</h3>
-<p>If you use virtual payments (e.g. purchase with in-game gold, coins, ...) in your project, you can track them with a call to TrackVirtualPayment.</p>
-<pre><code>infinario.TrackVirtualPayment("gold", 3, "SWORD", "SWORD.TYPE");</pre></code>
+### Identifying Players
 
-<h3>Player Sessions</h3>
-<p>Infinario automatically manages player sessions. Each session starts with a <code>session_start</code> event and ends with <code>session_end</code>.</p>
-<p>Once started, the SDK tries to recreate the previous session from its persistent cache. If it fails to, or the session has already expired it automatically creates a new one.</p>
+To control the identity of the current player use the `Identify` method. By calling
 
-<h3>Timestamps</h3>
-<p>The SDK automatically adds timestamps to all events. To specify your own timestamp, use one of the following method overloads:</p>
-<pre><code>infinario.Track("my_player_action", &lt;long_your_tsp&gt;);
-infinario.Track("my_player_action", &lt;properties&gt; , &lt;long_your_tsp&gt;);	
-</code></pre>
+    infinario.Identify("player@example.com");
 
-<h3>Offline Behavior</h3>
+you can register a new player in Infinario. All events you track by the `Track` method from now on will belong to this player. To switch to an existing player, simply call `Identify` with his name. You can switch the identity of the current player as many times as you need to.
 
-<p>Once instantized, the SDK collects and sends all tracked events continuously to the Infinario servers.</p>
+### Anonymous Players
 
-<p>However, if your application goes offline, the SDK guarantees you to re-send the events once online again (up to a approximately 5k offline events). This synchronization is transparent to you and happens in the background.</p>
+Up until you call `Identify` for the first time, all tracked events belong to an anonymous player (internally identified with a cookie). Once you call `Identify`, the previously anonymous player is automatically merged with the newly identified player.
 
-<h3>Final Remarks</h3>
-- Make sure you create at most one instance of ```Infinario``` during your application lifetime.
-- If you wish to override some of the capabilities (e.g. session management), please note that we will not be able to give you any guarantees.
+### Anonymizing Players
+
+You can forget the identity of your player (remove all the ids and generate new cookie) by calling `Unidentify`.
+
+    infinario.Unidentify();
+
+### Adding Properties
+
+Both `Identify` and `Track` accept an optional dictionary parameter that can be used to add custom information (properties) to the respective entity. Usage is straightforward:
+
+    infinario.Track("my_player_action", new Dictionary<string,object> {{"daily_score", 4700}});                                       
+
+    infinario.Identify("player@example.com", new Dictionary<string,object> {
+        {"first_name", "John"},
+        {"last_name", "Doe"}
+    }); 
+
+    infinario.Update(new Dictionary<string,object> {{"level", 1}}); // A shorthand for adding properties to the current player
+
+### Virtual payment
+
+If you use virtual payments (e.g. purchase with in-game gold, coins, ...) in your project, you can track them with a call to TrackVirtualPayment.
+
+    infinario.TrackVirtualPayment("gold", 3, "SWORD", "SWORD.TYPE");
+
+### Player Sessions
+
+Session is a real time spent in the game. Tracking of sessions produces two events, `session_start` and `session_end`. To track session start call `TrackSessionStart()` from where whole game gets focus and to track session end call `TrackSessionEnd()` from whole game loses focus.
+
+    // track session start
+    infinario.TrackSessionStart();
+    // or with properties
+    ifnfinario.TrackSessionStart(new Dictionary<string,object> {{"level", 1}});
+
+    // track session end
+    infinario.TrackSessionEnd();
+    // or with properties
+    ifnfinario.TrackSessionEnd(new Dictionary<string,object> {{"level", 1}});
+
+Both events contain the timestamp of the occurence together with basic attributes about the device (OS, OS version, SDK, SDK version and device model). Event `session_end` contains also the duration of the session in seconds.
+
+### Timestamps
+
+The SDK automatically adds timestamps to all events. To specify your own timestamp, use one of the following method overload:
+
+    infinario.Track("my_player_action", <properties> , <long_your_tsp>);	
+
+### Disposing of Infinario instance
+
+All tracked events are stored in the local SQL database. By default, Infinario SDK automatically takes care of flushing events to the Infinario API in separate thread that is started after calling `Initialize`. It is mandatory to call `Dispose` at the end of game since this will stop the thread and flush the events.
+
+    // all the events will be sent to Infinario API right now
+    infinario.Dispose();  
+
+    // events won't be sent now but they will be persisted on local storage. Infinario will send them after next call to Initialize
+    infinario.Dispose(false);
+
+### Logging
+
+By default Infinario does not log anything. You can turn on logging by specifying logger instance in `Initialize` call.
+
+    infinario.Initialize("projectToken", "1.5.0", null, new Infinario.Logging.ConsoleLogger());
+
+`ConsoleLogger` logs everything to console. You can implement your custom logger by implementing `Infinario.Logging.Logger` interface
+
+### Thread safety and blocking
+
+Infinario SDK implementation is thread safe. You can call `GetInstance` from any thread, just make sure that both `Initialize` and `Dispose` are called once. `Initialize` should be called before `Dispose`. It is possible to reinitialize already disposed Infinario object by calling `Initialize` once again. Every method on Infinario object except `Dispose` is non-blocking. We use separate threads for storing commands in SQLite database and for sending them to our API.
+
+Thread safety is guaranteed only when you are not modifying parameters used in Infinario calls afterwards. E.g. following use case is invalid and should be avoided:
+
+    Dictionary<string, object> properties = new Dictionary<string, object>();
+    properties["item"] = "sword";
+    infinario.Track("used_item", properties);
+
+    // this is invalid call and should be avoided since it will cause race condition
+    properties["item"] = "key";    
+
+### Tracking prior to initialization
+
+You can call any method on `Infinario` object except `Dispose` prior to `Initialize` call. All the commands are queued and will be executed after initialization. Methods tracked from another thread while calling `Dispose` are not garanteed to be executed.
+
+### Customizing working directory for SQLite
+
+By default Infinario stores datafile for SQLite database in current working directory. You can change this while calling `Initialize`.
+
+    infinario.Initialize("projectToken", "1.5.0", null, new NullLoger(), "specifyWorkingDirectoryHere");
+
+### Offline
+
+If your application goes offline, the SDK guarantees you to re-send the events later unless the user is offline for more then one day of continous use. This synchronization is transparent to you and happens in the background.
+
