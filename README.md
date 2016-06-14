@@ -1,4 +1,5 @@
 # Getting started with Infinario C# SDK
+[![Slack Status](http://community.exponea.com/badge.svg)](https://community.exponea.com/)
 
 ## Installation
 
